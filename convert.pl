@@ -3,7 +3,8 @@
 kgs_to_lbs(Kgs, Lbs) :-
     Lbs is Kgs * 2.205.
 
-stamp_to_date(Stamp, Date) :-
+heartdatetime_to_date(HeartDateTime, Date) :-
+    Stamp is HeartDateTime / 1000,
     stamp_date_time(Stamp, DateTime, local),
     DateTime =.. [date, Year, Month, Day|_],
     Date = Year-Month-Day.
@@ -20,4 +21,4 @@ file_weights(File, Weights) :-
 mapweight(Old, weight{ date: Date, weight: Lbs }) :-
     Old >:< _{ datetime: DateTime, value: Kgs },
     kgs_to_lbs(Kgs, Lbs),
-    stamp_to_date(DateTime, Date).
+    heartdatetime_to_date(DateTime, Date).
