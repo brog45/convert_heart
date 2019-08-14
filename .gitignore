@@ -1,2 +1,3 @@
-weight.csv
+*.csv
 heart_backup.dat
+heart_backup.json

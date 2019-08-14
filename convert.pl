@@ -13,21 +13,37 @@ file_json(File, JsonDict) :-
         json_read_dict(Fd, JsonDict), 
         close(Fd)).
 
-convert_weight(Old, weight{ date: Date, weight: Lbs }) :-
+convert_weight(Old, row(Date, Lbs)) :-
     Old >:< _{ datetime: DateTime, value: Kgs },
     kgs_to_lbs(Kgs, Lbs),
     heartdatetime_to_date(DateTime, Date).
 
-file_row(_, row('Date', 'Weight')).
-file_row(File, row(Date, Lbs)) :-
-    file_json(File, JsonDict), 
-    !, JsonDict >:< _{ data_weight: OldWeights },
+json_weight(_, row('Date', 'Weight')).
+json_weight(JsonDict, row(Date, Lbs)) :-
+    JsonDict >:< _{ data_weight: OldWeights },
     member(W1, OldWeights),
-    convert_weight(W1, W2),
-    W2 >:< weight{ date: Date, weight: Lbs }.
+    convert_weight(W1, row(Date, Lbs)).
 
-convert_backup() :-
-    setup_call_cleanup(open('weight.csv', write, Out),
-        forall(file_row('heart_backup.dat', Row),
-               csv_write_stream(Out, [Row], [])),
-        close(Out)).
+export_weights(JsonDict) :-
+    setup_call_cleanup(open('weight.csv', write, Fd),
+        forall(json_weight(JsonDict, Row),
+               csv_write_stream(Fd, [Row], [])),
+        close(Fd)).
+
+json_bp(_, row('Date', 'Systolic', 'Diastolic', 'Comment')).
+json_bp(JsonDict, row(Date, Systolic, Diastolic, Comment)) :-
+    JsonDict >:< _{ data_bp: BPs },
+    member(BP, BPs),
+    BP >:< _{ datetime: DateTime, sys: Systolic, dia: Diastolic, comment: Comment },
+    heartdatetime_to_date(DateTime, Date).
+
+export_bps(JsonDict) :-
+    setup_call_cleanup(open('blood_pressure.csv', write, Fd),
+        forall(json_bp(JsonDict, Row),
+               csv_write_stream(Fd, [Row], [])),
+        close(Fd)).
+
+convert_backup :-
+    file_json('heart_backup.dat', JsonDict),
+    export_weights(JsonDict),
+    export_bps(JsonDict).
