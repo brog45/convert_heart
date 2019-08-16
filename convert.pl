@@ -30,11 +30,11 @@ export_weights(JsonDict) :-
                csv_write_stream(Fd, [Row], [])),
         close(Fd)).
 
-json_bp(_, row('Date', 'Systolic', 'Diastolic', 'Comment')).
-json_bp(JsonDict, row(Date, Systolic, Diastolic, Comment)) :-
+json_bp(_, row('Date', 'Systolic', 'Diastolic', 'Rate', 'Comment')).
+json_bp(JsonDict, row(Date, Systolic, Diastolic, Rate, Comment)) :-
     JsonDict >:< _{ data_bp: BPs },
     member(BP, BPs),
-    BP >:< _{ datetime: DateTime, sys: Systolic, dia: Diastolic, comment: Comment },
+    BP >:< _{ datetime: DateTime, sys: Systolic, dia: Diastolic, rate: Rate, comment: Comment },
     heartdatetime_to_date(DateTime, Date).
 
 export_bps(JsonDict) :-
