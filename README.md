@@ -50,7 +50,7 @@ total 76
 -rw-rw-r-- 1 brog45 brog45  1431 Aug 16 18:07 blood_pressure.csv
 -rw-rw-r-- 1 brog45 brog45  1599 Aug 15 19:19 convert.pl
 -rw-rw-r-- 1 brog45 brog45 54743 Aug 13 20:44 heart_backup.dat
--rw-rw-r-- 1 brog45 brog45  1296 Aug 16 18:05 README.md
+-rw-rw-r-- 1 brog45 brog45   602 Aug 16 18:00 README.md
 -rw-rw-r-- 1 brog45 brog45  7898 Aug 16 18:07 weight.csv
 $ 
 ```
